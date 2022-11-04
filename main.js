@@ -1,4 +1,4 @@
-console.log('Hello, World!')
+// console.log('Hello, World!')
 
 let projectsUrl = 'http://127.0.0.1:8000/api/projects/' // endpoint to call
 
@@ -7,7 +7,7 @@ let getProjects = () => {
     fetch(projectsUrl) // call the endpoint
     .then(response => response.json()) // convert the response to JSON data
     .then(data => {
-        console.log(data) // print the JSON data
+        // console.log(data) // print the JSON data
         buildProjects(data)
     })
 
