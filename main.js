@@ -16,7 +16,9 @@ let getProjects = () => {
 let buildProjects = (projects) => {
 
     let projectsWrapper = document.getElementById('projects--wrapper')
-    
+    // Clear the projects at each iterration and reloard them to reflect their standings after each vote
+    // See line 81
+    projectsWrapper.innerHTML = ''
     for (let i = 0; projects.length > i; i++) {
         let project = projects[i]
         // console.log(project)
@@ -31,8 +33,10 @@ let buildProjects = (projects) => {
                 <div>
                     <div class="card--header">
                         <h3>${project.title}</h3>
-                        <strong class="vote--option" >&#43;</strong>
-                        <strong class="vote--option" >&#8722;</strong>
+                        <!-- Using custom attributes: -->
+                        <!-- data-vote="up" data-vote="down" data-project="${project.id}" -->
+                        <strong class="vote--option" data-vote="up" data-project="${project.id}" >&#43;</strong>
+                        <strong class="vote--option" data-vote="down" data-project="${project.id}" >&#8722;</strong>
                     </div>
                     <i>${project.vote_ratio}% Positive Feedback</i>
                     <p>${project.description.substring(0,150)}</p>
@@ -45,6 +49,46 @@ let buildProjects = (projects) => {
         projectsWrapper.innerHTML += projectCard
     }
 
+    // Add an Event Listener
+    addVoteEvents()
+
 }
+
+let addVoteEvents = () => {
+    let voteButtons = document.getElementsByClassName('vote--option')
+    // console.log('VOTE BUTTONS:', voteButtons)
+
+    for (let i = 0; voteButtons.length > i; i++) {
+        voteButtons[i].addEventListener('click', (e) => {
+            // console.log('Vote was clicked:', i)
+
+            // Set the token in the browser's Application/Storage/Local Storage
+            // by setting a token key (double click) and setting it's value
+            // Note: this a temporary solution unti we set-up this up in the frontend, from the login form
+            let token = localStorage.getItem('token')
+
+            // What type of vote and for which project ?
+            let vote = e.target.dataset.vote
+            let project = e.target.dataset.project
+            // console.log('PROJECT:', project, 'VOTE:', vote)
+
+            fetch(`http://127.0.0.1:8000/api/projects/${project}/vote/`, {
+                method: 'POST', 
+                headers: {
+                    'Content-Type':'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({'value':vote})
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data)
+                // Refresh the projects list to reflect the vote ratio
+                getProjects()
+            })
+        })
+    }
+}
+
 
 getProjects()
