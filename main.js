@@ -1,5 +1,24 @@
 // console.log('Hello, World!')
 
+let loginButton = document.getElementById('login-button')
+let logoutButton = document.getElementById('logout-button')
+
+let token = localStorage.getItem('token')
+
+if (token) {
+    loginButton.remove()
+} else {
+    logoutButton.remove()
+}
+
+// delete the JWT (Jason Web Token) for access on logout
+logoutButton.addEventListener('click', (e) => {
+    e.preventDefault()
+    localStorage.removeItem('token')
+    window.location = 'http://127.0.0.1:5500/login.html'
+})
+
+
 let projectsUrl = 'http://127.0.0.1:8000/api/projects/' // endpoint to call
 
 let getProjects = () => {
