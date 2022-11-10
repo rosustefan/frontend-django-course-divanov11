@@ -35,7 +35,7 @@ let getProjects = () => {
 let buildProjects = (projects) => {
 
     let projectsWrapper = document.getElementById('projects--wrapper')
-    // Clear the projects at each iterration and reloard them to reflect their standings after each vote
+    // Clear the projects at each iterration and reload them to reflect their standings after each vote
     // See line 81
     projectsWrapper.innerHTML = ''
     for (let i = 0; projects.length > i; i++) {
